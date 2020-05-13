@@ -1,0 +1,675 @@
+#include <iostream>
+#include <string>
+#include <stdlib.h> 
+#include <time.h> 
+#include <stdio.h>
+#include <time.h>
+#include <dos.h>
+#include <windows.h>
+
+using namespace std;
+
+class Karakter
+{
+private:
+	string character;
+	string arena;
+	int health;
+	int attack;
+	int defance;
+	int chance;
+	int care;
+
+public:
+	void setPrefs(int can, int saldiri, int defans, string karakter, int bakým, int sans)
+	{
+		health = can;
+		attack = saldiri;
+		defance = defans;
+		character = karakter;
+		care = bakým;
+		chance = sans;
+	}
+	int getHealth() {
+		return health;
+	}
+	int getAttack() {
+		return attack;
+	}
+	int getDefance() {
+		return defance;
+	}
+	string getCharacter() {
+		return character;
+	}
+	int getCare() {
+		return care;
+	}
+	int getChance() {
+		return chance;
+	}
+
+	void setArea(string stad)
+	{
+		arena = stad;
+	}
+	string getArea() {
+		return arena;
+	}
+};
+
+void hamleOyuncu();
+void hamleDusman();
+void olumKontrol();
+void yetenekBelirle();
+void setEnemy();
+void setArena();
+
+static Karakter p1;
+static Karakter p2;
+static Karakter p3;
+static Karakter p4;
+static Karakter p5;
+static Karakter p6;
+static Karakter p7;
+static Karakter p8;
+
+static int zorluk;
+static string karakter;
+/*KARAKTERLERÝN RANDOM NÝTELÝKLERÝ*/
+static int warriorcan;
+static int warriorsaldiri;
+static int warriordefans;
+static int warriorbakim;
+static int warriorsans;
+
+static int defendercan;
+static int defendersaldiri;
+static int defenderdefans;
+static int defenderbakim;
+static int defendersans;
+
+static int wizardcan;
+static int wizardsaldiri;
+static int wizarddefans;
+static int wizardbakim;
+static int wizardsans;
+
+static int healercan;
+static int healersaldiri;
+static int healerdefans;
+static int healerbakim;
+static int healersans;
+
+void yetenekBelirle()
+{
+	warriorcan = rand() % 250 + 100;
+	warriorsaldiri = rand() % 50 + 30;
+	warriordefans = rand() % 30 + 20;
+	warriorbakim = rand() % 10 + 5;
+	warriorsans = rand() % 16 + 12;
+
+	defendercan = rand() % 600 + 300;
+	defendersaldiri = rand() % 35 + 25;
+	defenderdefans = rand() % 70 + 50;
+	defenderbakim = rand() % 15 + 10;
+	defendersans = rand() % 13 + 10;
+
+	wizardcan = rand() % 200 + 100;
+	wizardsaldiri = rand() % 30 + 10;
+	wizarddefans = rand() % 25 + 15;
+	wizardbakim = rand() % 10 + 0;
+	wizardsans = rand() % 16 + 10;
+
+	healercan = rand() % 250 + 100;
+	healersaldiri = rand() % 30 + 10;
+	healerdefans = rand() % 30 + 15;
+	healerbakim = rand() % 20 + 10;
+	healersans = rand() % 23 + 15;
+}
+
+void olumKontrol()//OYUNCULARIN ÖLÜP ÖLMEDÝÐÝNÝ KONTROL EDEN VOÝD
+{
+	int can1 = p1.getHealth();
+	int can2 = p2.getHealth();
+	int islem;
+	if (can1 <= 0)
+	{
+		if (system("CLS"))
+			system("clear");
+		cout << "------------------------------------" << endl;
+		cout << "Maalesef Oldunuz ve Oyunu Kaybettiniz." << endl;
+		cout << "Yeni Oyuna Gecmek Icin 1'e Basin" << endl;
+		cin >> islem;
+		if (islem == 1)
+		{
+		}
+		else
+		{
+			system("PAUSE");
+		}
+	}
+	if (can2 <= 0)
+	{
+		if (system("CLS"))
+			system("clear");
+		cout << "------------------------------------" << endl;
+		cout << "Dusmaniniz Oldu ve Oyunu Kazandiniz." << endl;
+		cout << "Yeni Oyuna Gecmek Icin 1'e Basin" << endl;
+		cin >> islem;
+		if (islem == 1)
+		{
+		}
+		else
+		{
+			system("PAUSE");
+		}
+	}
+}
+
+void hamleDusman()//DÜÞMAN HAMLESÝ
+{
+	int islem = rand() % 20 + 1;
+	int islem2 = rand() % 20;
+	int p1can = p1.getHealth();
+	int p2can = p2.getHealth();
+	int p1saldiri = p1.getAttack();
+	int p2saldiri = p2.getAttack();
+	string p1karakter = p1.getCharacter();
+	string p2karakter = p2.getCharacter();
+
+	cout << p2karakter << " Oynuyor..." << endl;
+
+	if (islem >= 5 && p2can > 10)
+	{
+		int dmg;
+		if (p2karakter == "Insan")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 10;
+			if (zorluk == 2)
+				dmg = rand() % 13;
+			if (zorluk == 3)
+				dmg = rand() % 16;
+		}
+		if (p2karakter == "Doktor")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 5;
+			if (zorluk == 2)
+				dmg = rand() % 10;
+			if (zorluk == 3)
+				dmg = rand() % 15;
+		}
+		if (p2karakter == "Cadi")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 15;
+			if (zorluk == 2)
+				dmg = rand() % 18;
+			if (zorluk == 3)
+				dmg = rand() % 21;
+		}
+		p1can -= dmg;
+		p1.setPrefs(p1can, p1saldiri, p1karakter);
+		cout << p2karakter << " Saldirdi " << dmg << " Kadar Hasar Verdi" << endl;
+	}
+	if (islem <= 4 || p2can < 10)
+	{
+		if (p1can > 16)
+		{
+			if (islem2 > 5)
+			{
+				int hlt;
+				if (p2karakter == "Insan")
+				{
+					if (zorluk == 1)
+						hlt = rand() % 5;
+					if (zorluk == 2)
+						hlt = rand() % 10 + 2;
+					if (zorluk == 3)
+						hlt = rand() % 15 + 4;
+				}
+				if (p2karakter == "Doktor")
+				{
+					if (zorluk == 1)
+						hlt = rand() % 15;
+					if (zorluk == 2)
+						hlt = rand() % 20 + 2;
+					if (zorluk == 3)
+						hlt = rand() % 25 + 4;
+				}
+				if (p2karakter == "Cadi")
+				{
+					if (zorluk == 1)
+						hlt = rand() % 1;
+					if (zorluk == 2)
+						hlt = rand() % 5 + 2;
+					if (zorluk == 3)
+						hlt = rand() % 10 + 4;
+				}
+				p2can += hlt;
+				p2.setPrefs(p2can, p2saldiri, p2karakter);
+				cout << p2karakter << " " << hlt << " Kadar Can Yeniledi" << endl;
+			}
+			else
+			{
+				int dmg;
+				if (p2karakter == "Insan")
+				{
+					dmg = rand() % 25 + 10;
+				}
+				if (p2karakter == "Doktor")
+				{
+					dmg = rand() % 15 + 1;
+				}
+				if (p2karakter == "Cadi")
+				{
+					dmg = rand() % 35 + 20;
+				}
+				p1can -= dmg;
+				p1.setPrefs(p1can, p1saldiri, p1karakter);
+				cout << p2karakter << "Saldirdi " << dmg << " Kadar Hasar Verdi" << endl;
+			}
+		}
+		else
+		{
+			int dmg;
+			if (p2karakter == "Insan")
+			{
+				dmg = rand() % 25 + 10;
+			}
+			if (p2karakter == "Doktor")
+			{
+				dmg = rand() % 15 + 1;
+			}
+			if (p2karakter == "Cadi")
+			{
+				dmg = rand() % 35 + 20;
+			}
+			p1can -= dmg;
+			p1.setPrefs(p1can, p1saldiri, p1karakter);
+			cout << p2karakter << "Saldirdi " << dmg << " Kadar Hasar Verdi" << endl;
+		}
+	}
+
+	cout << "Sizin Caniniz: " << p1can << endl;
+	cout << "Dusman Cani: " << p2can << endl;
+	olumKontrol();
+	hamleOyuncu();
+}
+
+void hamleOyuncu()//OYUNCU HAMLESÝ
+{
+	int islem;
+	int p1can = p1.getHealth();
+	int p2can = p2.getHealth();
+	int p1saldiri = p1.getAttack();
+	int p2saldiri = p2.getAttack();
+	string p1karakter = p1.getCharacter();
+	string p2karakter = p2.getCharacter();
+
+	cout << "Sira Sizde" << endl;
+	cout << "Saldirmak icin 1'e, Can yenilemek icin 2'ye basin" << endl;
+	cin >> islem;
+	if (system("CLS"))
+		system("clear");
+
+	if (islem == 1)
+	{
+		int dmg;
+		if (p1karakter == "Insan")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 16;
+			if (zorluk == 2)
+				dmg = rand() % 14;
+			if (zorluk == 3)
+				dmg = rand() % 12 + 5;
+		}
+		if (p1karakter == "Doktor")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 16 + 5;
+			if (zorluk == 2)
+				dmg = rand() % 14 + 4;
+			if (zorluk == 3)
+				dmg = rand() % 12 + 3;
+		}
+		if (p1karakter == "Cadi")
+		{
+			if (zorluk == 1)
+				dmg = rand() % 20 + 3;
+			if (zorluk == 2)
+				dmg = rand() % 15 + 4;
+			if (zorluk == 3)
+				dmg = rand() % 15 + 5;
+		}
+		p2can -= dmg;
+		p2.setPrefs(p2can, p2saldiri, p2karakter);
+		cout << "Saldirdiniz " << dmg << " Kadar Hasar Verildi" << endl;
+	}
+	if (islem == 2)
+	{
+		int hlt;
+		if (p1karakter == "Insan")
+		{
+			if (zorluk == 1)
+				hlt = rand() % 20 + 1;
+			if (zorluk == 2)
+				hlt = rand() % 15 + 2;
+			if (zorluk == 3)
+				hlt = rand() % 10 + 3;
+		}
+		if (p1karakter == "Doktor")
+		{
+			if (zorluk == 1)
+				hlt = rand() % 25 + 4;
+			if (zorluk == 2)
+				hlt = rand() % 15 + 2;
+			if (zorluk == 3)
+				hlt = rand() % 10;
+		}
+		if (p1karakter == "Cadi")
+		{
+			if (zorluk == 1)
+				hlt = rand() % 20 + 3;
+			if (zorluk == 2)
+				hlt = rand() % 15 + 2;
+			if (zorluk == 3)
+				hlt = rand() % 10 + 1;
+		}
+		p1can += hlt;
+		p1.setPrefs(p1can, p1saldiri, p1karakter);
+		cout << "Can Yenilediniz " << hlt << " Kadar Can Yenilendi" << endl;
+	}
+	olumKontrol();
+	hamleDusman();
+}
+
+void karakterSec()//KARAKTER SEÇTÝRME
+{
+	cout << "Lutfen Karakter Seciniz\n" << endl;
+
+	cout << "Warrior : " << endl;
+	cout << "-----------------------";
+	cout << "\nCan: 250-100\nSaldiri Gucu: 50-30\nDefans: 30-20\nCan Yenileme: 10-5\nÞans: %16-12\n\n" << endl;
+	Sleep(2000);
+
+	cout << "Defender : " << endl;
+	cout << "-----------------------";
+	cout << "\nCan: 600-300\nSaldiri Gucu: 35-15\nDefans: 70-50\nCan Yenileme: 20-10\nÞans: %13-10\n\n" << endl;
+	Sleep(2000);
+
+	cout << "Wizard : " << endl;
+	cout << "-----------------------";
+	cout << "\nCan: 200-100\nSaldiri Gucu: 30-10\nDefans: 25-15\nCan Yenileme: 15-5\nÞans: %16-10\n\n" << endl;
+	Sleep(2000);
+
+	cout << "Healer : " << endl;
+	cout << "-----------------------";
+	cout << "\nCan: 250-100\nSaldiri Gucu: 30-10\nDefans: 30-15\nCan Yenileme: 30-20\nÞans: %23-15\n\n" << endl;
+	Sleep(2000);
+}
+
+void setEnemy()
+{
+	int karakter2 = rand() % 4 + 1;
+	int karakter3 = rand() % 4 + 1;
+	int karakter4 = rand() % 4 + 1;
+	int karakter5 = rand() % 4 + 1;
+	int karakter6 = rand() % 4 + 1;
+	int karakter7 = rand() % 4 + 1;
+	int karakter8 = rand() % 4 + 1;
+	/*karakterler random olarak random niteliklerle hazýrlanýr*/
+	if (karakter2 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter2 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter2 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter2 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter3 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter3 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter3 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter3 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter4 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter4 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter4 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter4 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter5 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter5 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter5 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter5 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter6 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter6 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter6 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter6 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter7 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter7 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter7 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter7 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+
+
+	if (karakter8 = 1)
+	{
+		yetenekBelirle();
+		p2.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorsans);
+	}
+	if (karakter8 = 2)
+	{
+		yetenekBelirle();
+		p2.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defendersans);
+	}
+	if (karakter8 = 3)
+	{
+		yetenekBelirle();
+		p2.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardsans);
+	}
+	if (karakter8 = 4)
+	{
+		yetenekBelirle();
+		p2.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healersans);
+	}
+}
+
+void setArena()
+{
+	int random = rand() % 4 + 1;
+	string stad;
+	if (random == 1)
+		stad = "Casual";
+	if (random == 2)
+		stad = "Fire Spin";
+	if (random == 3)
+		stad = "Vallhalla";
+	if (random == 4)
+		stad = "Aurora";
+	p1.setArea(stad);
+}
+
+int zorlukSec()//ZORLUK SEÇTÝRME
+{
+	zorluk;
+	cout << "Lutfen Zorluk Seviyesi Secin (1, 2, 3)" << endl;
+	cin >> zorluk;
+	if (zorluk == 1 || zorluk == 2 || zorluk == 3)
+	{
+		return zorluk;
+	}
+	else
+	{
+		cout << "Hatali Bir Secim Yaptinz Lutfen Tekrar Deneyin." << endl;
+		zorlukSec();
+	}
+	if (system("CLS"))
+		system("clear");
+}
+
+int main()
+{
+	srand(time(NULL));
+	yetenekBelirle();
+	zorlukSec();
+	if (system("CLS"))
+		system("clear");
+
+	karakterSec();
+	cin >> karakter;
+	if (karakter == "Warrior")
+		p1.setPrefs(warriorcan, warriorsaldiri, warriordefans, "Warrior", warriorbakim, warriorsans);
+	if (karakter == "Defender")
+		p1.setPrefs(defendercan, defendersaldiri, defenderdefans, "Defender", defenderbakim, defendersans);
+	if (karakter == "Wizard")
+		p1.setPrefs(wizardcan, wizardsaldiri, wizarddefans, "Wizard", wizardbakim, wizardsans);
+	if (karakter == "Healer")
+		p1.setPrefs(healercan, healersaldiri, healerdefans, "Healer", healerbakim, healersans);
+	if (karakter != "Warrior" && karakter != "Defender" && karakter != "Wizard" && karakter != "Healer")
+	{
+		cout << "Hatali Bir Giris Yaptiniz Lutfen Gecerli Bir Karakter Giriniz." << endl;
+		karakterSec();
+	}
+	if (system("CLS"))
+		system("clear");
+
+	/*DÜÞMANLARI AYARLA*/
+	setEnemy();
+
+	/*ARENA AYARLA*/
+	setArena();
+
+	/*ÝNFO VER*/
+	cout << "TAKIMINIZ" << endl;
+	cout << "Karakteriniz : " << p1.getCharacter << " Can: " << p1.getHealth << " Saldýrma Gücü: " << p1.getAttack << " Defans: " << p1.getDefance << " Can Yenileme Oraný: " << p1.getCare << "Þans: " << p1.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 1 : " << p2.getCharacter << " Can: " << p2.getHealth << " Saldýrma Gücü: " << p2.getAttack << " Defans: " << p2.getDefance << " Can Yenileme Oraný: " << p2.getCare << "Þans: " << p2.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 2 : " << p3.getCharacter << " Can: " << p3.getHealth << " Saldýrma Gücü: " << p3.getAttack << " Defans: " << p3.getDefance << " Can Yenileme Oraný: " << p3.getCare << "Þans: " << p3.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 3 : " << p4.getCharacter << " Can: " << p4.getHealth << " Saldýrma Gücü: " << p4.getAttack << " Defans: " << p4.getDefance << " Can Yenileme Oraný: " << p4.getCare << "Þans: " << p4.getChance << endl;
+	cout << endl;
+
+	Sleep(5000);
+
+	cout << "DÜÞMAN TAKIMI" << endl;
+	cout << "Bot 4 : " << p5.getCharacter << " Can: " << p5.getHealth << " Saldýrma Gücü: " << p5.getAttack << " Defans: " << p5.getDefance << " Can Yenileme Oraný: " << p5.getCare << "Þans: " << p5.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 5 : " << p6.getCharacter << " Can: " << p6.getHealth << " Saldýrma Gücü: " << p6.getAttack << " Defans: " << p6.getDefance << " Can Yenileme Oraný: " << p6.getCare << "Þans: " << p6.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 6 : " << p7.getCharacter << " Can: " << p7.getHealth << " Saldýrma Gücü: " << p7.getAttack << " Defans: " << p7.getDefance << " Can Yenileme Oraný: " << p7.getCare << "Þans: " << p7.getChance << endl;
+	cout << endl;
+	Sleep(1000);
+	cout << "Bot 7 : " << p8.getCharacter << " Can: " << p8.getHealth << " Saldýrma Gücü: " << p8.getAttack << " Defans: " << p8.getDefance << " Can Yenileme Oraný: " << p8.getCare << "Þans: " << p8.getChance << endl;
+	cout << endl;
+
+	hamleOyuncu();
+	return 0;
+}
